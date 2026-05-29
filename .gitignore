@@ -1,0 +1,9 @@
+# Nix build artifacts
+result
+result-*
+
+# Wallpapers / large media (kept locally, used by GNOME)
+*.jxl
+*.png
+*.jpg
+*.jpeg
