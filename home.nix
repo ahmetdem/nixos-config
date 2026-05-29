@@ -125,8 +125,9 @@
       eval "$(fzf --bash)"
       eval "$(zoxide init bash)"
 
-      export SDKMAN_DIR="$HOME/.sdkman"
-      [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+      bind 'TAB:menu-complete'
+      bind '"\e[Z":menu-complete-backward'  # shift+tab to go back
+      bind 'set completion-ignore-case on'
     '';
     bashrcExtra = ''
       PS1="''${VIRTUAL_ENV_PROMPT:+(''${VIRTUAL_ENV_PROMPT}) }\[\e[1;32m\]\w\[\e[0m\]$ ";
