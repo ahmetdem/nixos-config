@@ -30,6 +30,13 @@
     nix-direnv.enable = true;
   };
 
+  dconf.settings = {
+    "org/gnome/desktop/default-applications/terminal" = {
+      exec = "ghostty";
+      exec-arg = "-e";
+    };
+  };
+
   home.packages = with pkgs; [
     wl-clipboard
     eza
@@ -46,6 +53,13 @@
     yazi
     texlive.combined.scheme-medium
     fragments
+    unityhub
+    gapless
+    obs-studio
+    jetbrains.idea-community
+    vesktop
+    mangohud
+    goverlay
 
     # GNOME Extensions
     gnomeExtensions.blur-my-shell
@@ -128,6 +142,24 @@
       bind 'TAB:menu-complete'
       bind '"\e[Z":menu-complete-backward'  # shift+tab to go back
       bind 'set completion-ignore-case on'
+
+      wifi-login() {
+        sudo systemctl stop dnscrypt-proxy zapret || return 1
+        local dns
+        dns=$(nmcli -t -f IP4.DNS dev show 2>/dev/null | cut -d: -f2 | grep -v '^127\.' | head -1)
+        [[ -z "$dns" ]] && dns=$(ip route show default 2>/dev/null | awk '{print $3; exit}')
+        [[ -z "$dns" ]] && dns="1.1.1.1"
+        printf 'nameserver %s\n' "$dns" | sudo tee /run/resolv-login.conf >/dev/null
+        sudo mount --bind /run/resolv-login.conf "$(readlink -f /etc/resolv.conf)"
+        echo "Login mode active — DNS: $dns"
+      }
+
+      wifi-secure() {
+        sudo umount "$(readlink -f /etc/resolv.conf)" 2>/dev/null || true
+        sudo rm -f /run/resolv-login.conf
+        sudo systemctl start dnscrypt-proxy zapret
+        echo "Secure mode restored"
+      }
     '';
     bashrcExtra = ''
       PS1="''${VIRTUAL_ENV_PROMPT:+(''${VIRTUAL_ENV_PROMPT}) }\[\e[1;32m\]\w\[\e[0m\]$ ";

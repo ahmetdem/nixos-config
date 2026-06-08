@@ -6,7 +6,7 @@
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.timeout = 0; 
+  boot.loader.timeout = 0;
 
   # Load the AMD iGPU driver early (PRIME render offload pairs it with Nvidia)
   boot.initrd.kernelModules = [ "amdgpu" ];
@@ -45,7 +45,7 @@
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true;
-    powerManagement.finegrained = true;
+    powerManagement.finegrained = false;
     open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -99,7 +99,6 @@
   };
 
   programs.nix-ld.enable = true; # lets unpatched dynamic binaries run
-
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
@@ -166,8 +165,6 @@
       "--dpi-desync=multisplit"
       "--dpi-desync-split-pos=2"
     ];
-    udpSupport = true;
-    udpPorts = [ "443" ];
   };
 
   nix.settings = {
