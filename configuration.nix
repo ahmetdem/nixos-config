@@ -99,6 +99,35 @@
   };
 
   programs.nix-ld.enable = true; # lets unpatched dynamic binaries run
+  programs.nix-ld.libraries = with pkgs; [
+    glfw3-minecraft
+    openal
+    alsa-lib
+    libjack2
+    libpulseaudio
+    pipewire
+    libGL
+    libglvnd
+    mesa
+    wayland
+    libxkbcommon
+    udev
+    vulkan-loader
+    flite
+    fontconfig
+    freetype
+    libX11
+    libXcursor
+    libXext
+    libXi
+    libXrandr
+    libXrender
+    libXtst
+    libXxf86vm
+    xprop
+    zenity
+  ];
+
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
@@ -109,7 +138,6 @@
     appimage-run
     gcc
     gnumake
-    zapret
     gnome-tweaks
   ];
 
@@ -130,42 +158,15 @@
     xterm
   ];
 
+  programs.steam = {
+    enable = true;
+  };
+
+  programs.gamemode.enable = true;
+
   fonts.packages = with pkgs; [
     nerd-fonts.zed-mono
   ];
-
-  # Tell NetworkManager not to override DNS
-  networking.nameservers = [ "127.0.0.1" ];
-  networking.networkmanager.dns = "none";
-
-  services.dnscrypt-proxy = {
-    enable = true;
-    settings = {
-      listen_addresses = [ "127.0.0.1:53" ];
-      bootstrap_resolvers = [ "192.168.1.1:53" ];
-      ignore_system_dns = true;
-      sources.public-resolvers = {
-        urls = [
-          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
-          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
-        ];
-        cache_file = "/var/lib/dnscrypt-proxy/public-resolvers.md";
-        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
-      };
-    };
-  };
-
-  systemd.services.dnscrypt-proxy.serviceConfig.StateDirectory = "dnscrypt-proxy";
-
-  services.zapret = {
-    enable = true;
-    configureFirewall = true;
-    httpSupport = true;
-    params = [
-      "--dpi-desync=multisplit"
-      "--dpi-desync-split-pos=2"
-    ];
-  };
 
   nix.settings = {
     experimental-features = [

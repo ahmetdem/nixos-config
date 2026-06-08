@@ -11,7 +11,17 @@
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
-  programs.neovim.enable = true;
+
+  programs.neovim = {
+    enable = true;
+    withRuby = false;
+    withPython3 = false;
+  };
+
+  xdg.configFile."nvim" = {
+    source = ./nvim;
+    recursive = true;
+  };
 
   programs.ssh = {
     enable = true;
@@ -56,10 +66,11 @@
     unityhub
     gapless
     obs-studio
-    jetbrains.idea-community
+    jetbrains.idea-oss
     vesktop
     mangohud
     goverlay
+    zulu21
 
     # GNOME Extensions
     gnomeExtensions.blur-my-shell
@@ -68,7 +79,6 @@
     gnomeExtensions.rounded-window-corners-reborn
     gnomeExtensions.user-themes
     gnomeExtensions.vitals
-    gnomeExtensions.window-title-is-back
     gnomeExtensions.middle-click-to-close-in-overview
     gnomeExtensions.caffeine
 
@@ -76,7 +86,7 @@
     clang-tools
     lua-language-server
     pyright
-    nodePackages.typescript-language-server
+    typescript-language-server
     bash-language-server
     zls
     marksman
